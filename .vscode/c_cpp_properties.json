@@ -1,0 +1,21 @@
+{
+  "version": 4,
+  "configurations": [
+    {
+      "name": "WSL-gcc15",
+      "includePath": [
+        "${workspaceFolder}/**",
+        "/usr/include/c++/15",
+        "/usr/include/x86_64-linux-gnu/c++/15",
+        "/usr/include",
+        "/usr/include/x86_64-linux-gnu"
+      ],
+      "defines": [],
+      "compilerPath": "/usr/bin/g++",
+      "compilerArgs": ["-std=c++20"],
+      "cStandard": "c17",
+      "cppStandard": "c++20",
+      "intelliSenseMode": "linux-gcc-x64"
+    }
+  ]
+}

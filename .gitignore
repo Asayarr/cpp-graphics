@@ -1,0 +1,32 @@
+# ---------- 构建产物 ----------
+build/
+out/
+.vs/
+.vscode/ipch/
+bin/
+*.o
+*.obj
+*.exe
+
+# ---------- 编译出的可执行文件（与 .cpp 同名，无扩展名）----------
+# 逻辑：先忽略 examples/ 和 mycode/ 下所有文件，再放行源码和说明。
+# 这样 `make` 生成的可执行文件不会被 git 跟踪，源码照常跟踪。
+examples/**
+!examples/**/
+!examples/**/*.cpp
+!examples/**/*.h
+!examples/**/README.md
+
+mycode/**
+!mycode/**/
+!mycode/**/*.cpp
+!mycode/**/*.h
+!mycode/**/README.md
+
+# ---------- 渲染输出 ----------
+*.tga
+*.png
+framebuffer.*
+
+# ---------- 教程项目 ----------
+tinyrenderer/
