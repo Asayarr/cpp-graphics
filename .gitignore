@@ -28,3 +28,4 @@ framebuffer.png
 
 # ---------- tinyrenderer/mine 的产物 ----------
 tinyrenderer/mine/app
+tinyrenderer/mine/*/app
