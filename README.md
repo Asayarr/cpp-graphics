@@ -75,6 +75,7 @@ cpp-graphics/
 │   └── multifile/                # 多文件编译示范（.h / .cpp / main.cpp）
 ├── mycode/                       # 你自己的练习代码
 │   └── README.md
+├── tinyrenderer/                 # TinyRenderer 教程项目（见下方版权说明）
 ├── CMakeLists.txt
 ├── Makefile
 ├── tga2png.py                    # TGA → PNG 转换脚本
@@ -162,4 +163,10 @@ python3 tga2png.py framebuffer.tga output.png # 指定输出文件名
 
 ## 许可证
 
-本项目基于 [MIT License](LICENSE) 开源。
+本项目自写部分基于 [MIT License](LICENSE) 开源。
+
+### 第三方内容
+
+`tinyrenderer/` 目录来自 [ssloy/tinyrenderer](https://github.com/ssloy/tinyrenderer)，
+同样基于 MIT License 发布（原始许可证见 `tinyrenderer/LICENSE.txt`）。
+为便于跟随教程学习，本仓库仅保留了其源码与必要素材。

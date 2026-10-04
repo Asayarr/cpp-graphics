@@ -5,12 +5,11 @@ out/
 .vscode/ipch/
 bin/
 *.o
-*.obj
 *.exe
+*.pdb
 
-# ---------- 编译出的可执行文件（与 .cpp 同名，无扩展名）----------
-# 逻辑：先忽略 examples/ 和 mycode/ 下所有文件，再放行源码和说明。
-# 这样 `make` 生成的可执行文件不会被 git 跟踪，源码照常跟踪。
+# ---------- examples/ 与 mycode/：只跟踪源码，忽略编译出的可执行文件 ----------
+# 逻辑：先忽略目录下所有文件，再放行源码和说明。
 examples/**
 !examples/**/
 !examples/**/*.cpp
@@ -24,9 +23,5 @@ mycode/**
 !mycode/**/README.md
 
 # ---------- 渲染输出 ----------
-*.tga
-*.png
-framebuffer.*
-
-# ---------- 教程项目 ----------
-tinyrenderer/
+framebuffer.tga
+framebuffer.png
