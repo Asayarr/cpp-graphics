@@ -69,13 +69,11 @@ cmake --build build
 ```text
 cpp-graphics/
 ├── examples/                     # 教程示例
-│   ├── 01_hello.cpp
-│   ├── ...
-│   ├── 08_template_specialization.cpp
+│   ├── 01_hello.cpp … 08_template_specialization.cpp
 │   └── multifile/                # 多文件编译示范（.h / .cpp / main.cpp）
-├── mycode/                       # 你自己的练习代码
-│   └── README.md
+├── mycode/                       # 你自己的 C++ 练习
 ├── tinyrenderer/                 # TinyRenderer 教程项目（见下方版权说明）
+│   └── mine/                     # ★ 你的 tinyrenderer 实现写在这里
 ├── CMakeLists.txt
 ├── Makefile
 ├── tga2png.py                    # TGA → PNG 转换脚本
@@ -153,6 +151,20 @@ gdb /tmp/02_basics
 python3 tga2png.py framebuffer.tga            # 生成 framebuffer.png
 python3 tga2png.py framebuffer.tga output.png # 指定输出文件名
 ```
+
+## TinyRenderer
+
+`tinyrenderer/` 是 [ssloy/tinyrenderer](https://github.com/ssloy/tinyrenderer) 的源码与必要素材（参考实现），
+`tinyrenderer/mine/` 用于跟随教程自己编写实现：
+
+```bash
+cd tinyrenderer/mine
+make run                    # 编译并运行
+python3 ~/cpp-graphics/tga2png.py framebuffer.tga
+```
+
+在 VS Code 中可直接使用任务 `tinyrenderer: build` / `tinyrenderer: run`，
+或用调试配置「调试 tinyrenderer/mine」按 F5 单步调试。
 
 ## 延伸学习
 

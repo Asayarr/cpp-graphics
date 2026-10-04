@@ -21,6 +21,30 @@
         }
       ],
       "preLaunchTask": "build current file"
+    },
+    {
+      "name": "调试 tinyrenderer/mine",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/tinyrenderer/mine/app",
+      "args": [
+        "${workspaceFolder}/tinyrenderer/obj/diablo3_pose/diablo3_pose.obj",
+        "${workspaceFolder}/tinyrenderer/obj/floor.obj"
+      ],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}/tinyrenderer/mine",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb",
+      "setupCommands": [
+        {
+          "description": "启用 gdb pretty-printing（STL 容器更好看）",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ],
+      "preLaunchTask": "tinyrenderer: build"
     }
   ]
 }

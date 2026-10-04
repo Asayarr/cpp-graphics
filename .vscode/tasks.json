@@ -35,6 +35,23 @@
       "dependsOn": ["build current file"],
       "options": { "cwd": "${fileDirname}" },
       "problemMatcher": []
+    },
+    {
+      "label": "tinyrenderer: build",
+      "type": "shell",
+      "command": "make",
+      "args": [],
+      "options": { "cwd": "${workspaceFolder}/tinyrenderer/mine" },
+      "group": "build",
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "tinyrenderer: run",
+      "type": "shell",
+      "command": "make",
+      "args": ["run"],
+      "options": { "cwd": "${workspaceFolder}/tinyrenderer/mine" },
+      "problemMatcher": []
     }
   ]
 }
