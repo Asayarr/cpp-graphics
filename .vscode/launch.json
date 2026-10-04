@@ -2,10 +2,10 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "C++ 调试当前文件 (gdb)",
+      "name": "C++ 调试当前项目 (gdb)",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${fileDirname}/${fileBasenameNoExtension}",
+      "program": "${fileDirname}/app",
       "args": [],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",
@@ -20,7 +20,7 @@
           "ignoreFailures": true
         }
       ],
-      "preLaunchTask": "build current file"
+      "preLaunchTask": "build current project"
     },
     {
       "name": "调试 tinyrenderer/mine",

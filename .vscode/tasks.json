@@ -11,28 +11,19 @@
       "problemMatcher": ["$gcc"]
     },
     {
-      "label": "build current file",
+      "label": "build current project",
       "type": "shell",
-      "command": "/usr/bin/g++",
-      "args": [
-        "-std=c++20",
-        "-Wall",
-        "-Wextra",
-        "-g",
-        "-O0",
-        "${file}",
-        "-o",
-        "${fileDirname}/${fileBasenameNoExtension}"
-      ],
+      "command": "${workspaceFolder}/tools/build-current.sh",
+      "args": ["${file}"],
       "options": { "cwd": "${fileDirname}" },
       "group": "build",
       "problemMatcher": ["$gcc"]
     },
     {
-      "label": "run current file",
+      "label": "run current project",
       "type": "shell",
-      "command": "${fileDirname}/${fileBasenameNoExtension}",
-      "dependsOn": ["build current file"],
+      "command": "${fileDirname}/app",
+      "dependsOn": ["build current project"],
       "options": { "cwd": "${fileDirname}" },
       "problemMatcher": []
     },
