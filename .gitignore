@@ -29,3 +29,32 @@ framebuffer.png
 # ---------- tinyrenderer/mine 的产物 ----------
 tinyrenderer/mine/app
 tinyrenderer/mine/*/app
+
+# ---------- C++ 课程作业 ----------
+# 保留源码 / 工程文件（main.cpp / pch.h / .vcxproj / .sln / 截图），
+# 忽略 Visual Studio 的编译产物
+homework/**/VS工程/Debug/
+homework/**/Debug/
+homework/**/*.obj
+homework/**/*.exe
+homework/**/*.pdb
+homework/**/*.ilk
+homework/**/*.idb
+homework/**/*.log
+homework/**/*.tlog/
+homework/**/*.pch
+homework/**/*.lastbuildstate
+homework/**/*.opendb
+homework/**/*.user
+homework/**/UpgradeLog.htm
+homework/复杂曲线/curve
+homework/复杂曲线/运行截图.tga
+homework/爱心曲线/heart
+homework/爱心曲线/运行截图.tga
+homework/奶龙/figure
+homework/奶龙/运行截图.tga
+homework/lcy/peppa
+
+# ---------- Python ----------
+__pycache__/
+*.pyc
