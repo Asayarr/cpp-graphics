@@ -6,9 +6,11 @@
     python3 tga2png.py framebuffer.tga out.png
 
 支持 tinyrenderer 会生成的 TGA 格式：
-  - 类型 2  : 未压缩真彩色
-  - 类型 10 : RLE 压缩真彩色
-  - 24/32 位, 底部/顶部原点
+  - 类型 2  : 未压缩真彩色（24/32 位）
+  - 类型 10 : RLE 压缩真彩色（24/32 位）
+  - 类型 3  : 未压缩灰度（8 位，用于 zbuffer.tga）
+  - 类型 11 : RLE 压缩灰度（8 位）
+  - 底部/顶部原点均可
 """
 import struct
 import sys
@@ -24,21 +26,24 @@ def read_tga(path):
 
     if cmap_type != 0:
         raise ValueError("带调色板的 TGA 暂不支持")
-    if dtype not in (2, 10):
-        raise ValueError(f"只支持类型 2/10 的真彩色 TGA，当前类型={dtype}")
-    if bpp not in (24, 32):
-        raise ValueError(f"只支持 24/32 位，当前 {bpp} 位")
+    if dtype not in (2, 3, 10, 11):
+        raise ValueError(f"只支持类型 2/3/10/11，当前类型={dtype}")
+    if bpp not in (8, 24, 32):
+        raise ValueError(f"只支持 8/24/32 位，当前 {bpp} 位")
 
     nbytes = bpp // 8
     npx = w * h
     pixels = bytearray(npx * 3)          # 统一转成 RGB
 
     def put(idx, px):
-        b, g, r = px[0], px[1], px[2]
         o = idx * 3
-        pixels[o], pixels[o + 1], pixels[o + 2] = r, g, b
+        if nbytes == 1:                   # 灰度：一个字节，复制到 R/G/B
+            pixels[o] = pixels[o + 1] = pixels[o + 2] = px[0]
+        else:                             # 真彩色：BGR(A) → RGB
+            b, g, r = px[0], px[1], px[2]
+            pixels[o], pixels[o + 1], pixels[o + 2] = r, g, b
 
-    if dtype == 2:                        # 未压缩
+    if dtype in (2, 3):                   # 未压缩（真彩色 / 灰度）
         for i in range(npx):
             put(i, data[off + i * nbytes: off + (i + 1) * nbytes])
     else:                                 # RLE

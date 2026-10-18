@@ -25,6 +25,8 @@ mycode/**
 # ---------- 渲染输出 ----------
 framebuffer.tga
 framebuffer.png
+zbuffer.tga
+zbuffer.png
 
 # ---------- tinyrenderer/mine 的产物 ----------
 tinyrenderer/mine/app

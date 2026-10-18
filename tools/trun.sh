@@ -51,6 +51,15 @@ cd "$MINE/$CH"
 ./app "$MODEL"
 
 echo "==> 转 PNG"
-python3 "$T2P" framebuffer.tga
+made=0
+for f in framebuffer.tga zbuffer.tga; do
+    if [ -f "$f" ]; then
+        python3 "$T2P" "$f"
+        made=1
+    fi
+done
+[ "$made" -eq 1 ] || echo "  (程序没有生成 .tga 文件)"
+
 echo
-echo "结果: $MINE/$CH/framebuffer.png"
+echo "结果目录: $MINE/$CH/"
+ls -1 "$MINE/$CH"/*.png 2>/dev/null | sed 's|.*/|  |' || true
