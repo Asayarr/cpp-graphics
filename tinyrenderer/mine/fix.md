@@ -195,6 +195,61 @@ constexpr double s = 0.5;                 // sin(30°)
 constexpr mat<3,3> Ry = {{{c, 0, s}, {0, 1, 0}, {-s, 0, c}}};
 ```
 
+### 6.5 `multiple definition of 'lookat' / 'ModelView' / ...`
+
+**报错**：
+
+```
+multiple definition of `Perspective'
+multiple definition of `lookat(vec<3>, vec<3>, vec<3>)'
+```
+
+**原因**：Makefile 会链接 `tinyrenderer/our_gl.cpp`，它已经定义了：
+
+```cpp
+mat<4,4> ModelView, Viewport, Perspective;
+void lookat(...);
+void init_perspective(...);
+void init_viewport(...);
+void init_zbuffer(...);
+void rasterize(...);
+```
+
+你在自己章节的 `main.cpp` 里又写了一遍 → 重复定义。
+
+**改法（二选一）**：
+
+1. **给自己的定义加 `static`**（内部链接，最小改动）：
+
+```cpp
+static mat<4, 4> ModelView, Viewport, Perspective;
+static void lookat(const vec3 eye, const vec3 center, const vec3 up) { ... }
+```
+
+2. **别自己写**，直接用 `our_gl.h` 的接口：
+
+```cpp
+#include "our_gl.h"
+extern mat<4,4> ModelView, Perspective;
+
+lookat(eye, center, up);
+init_perspective(f);
+init_viewport(x, y, w, h);
+init_zbuffer(w, h);
+```
+
+> 注意函数名不同：`our_gl.cpp` 里是 `init_perspective` / `init_viewport`，
+> 教程页上写的是 `perspective` / `viewport`。
+
+### 6.6 `geometry.h` 没有一元 `operator-`
+
+```cpp
+vec3 v = normalized(-p);        // ❌ geometry.h 没定义一元负号
+vec3 v = normalized(p * -1.0);  // ✅ 用乘 -1，或者手动取反
+```
+
+同理，`vec` 也没定义 `+=` / `-=` 这类复合赋值（只有 `+ - * /` 和点积）。
+
 ---
 
 ## 7. 速查卡
