@@ -1,51 +1,68 @@
 # cpp-graphics
 
 ![C++](https://img.shields.io/badge/C%2B%2B-20-00599C?logo=cplusplus&logoColor=white)
-![CMake](https://img.shields.io/badge/CMake-3.16%2B-064F8C?logo=cmake&logoColor=white)
-![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20macOS%20%7C%20Windows-informational)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-> 面向 C++ 与计算机图形学入门的可运行示例集。
-> A collection of minimal, runnable C++ examples for learning computer graphics.
+跟随 [TinyRenderer](https://haqr.eu/tinyrenderer/) 教程，用 C++ 从零实现一个**软件渲染器**。
 
-本仓库面向 **具备 C 语言基础、熟悉 Python / C#**，希望快速掌握 C++ 基础语法并进入计算机图形学的学习者。
-
-每个示例都是一个可独立编译运行的最小程序，内容从语言基础逐步过渡到渲染循环骨架，
-并着重介绍图形学中高频使用的 C++ 特性（引用与值语义、RAII、运算符重载、模板与特化、智能指针、多态）。
-
-`examples/` 为教程示例，`mycode/` 用于存放跟随学习时自己编写的练习代码。
+仓库里既有原作者（[ssloy](https://github.com/ssloy/tinyrenderer)）的参考实现与素材，
+也有我按章节自己写的实现，以及过程中踩坑的记录。
 
 ## 目录
 
-- [特性](#特性)
+- [项目简介](#项目简介)
+- [目录结构](#目录结构)
 - [环境要求](#环境要求)
 - [快速开始](#快速开始)
-- [项目结构](#项目结构)
-- [示例说明](#示例说明)
-- [构建](#构建)
-- [调试](#调试)
+- [章节说明](#章节说明)
 - [工具](#工具)
-- [延伸学习](#延伸学习)
+- [踩坑记录](#踩坑记录)
+- [参考](#参考)
 - [许可证](#许可证)
 
-## 特性
+## 项目简介
 
-- **递进式示例**：8 个由浅入深的 C++ 示例，每个均可单独编译运行。
-- **图形学导向**：覆盖图形学中最常用的语言特性，而非泛泛的语言教程。
-- **手写 vec3**：通过实现向量类型理解 `glm` 等数学库的运算符重载原理。
-- **渲染循环骨架**：给出典型实时渲染主循环的结构，便于衔接 OpenGL / TinyRenderer 等后续内容。
-- **零配置构建**：同时提供 Makefile 与 CMake 两种构建方式，新增源文件会被自动纳入构建。
-- **配套工具**：内置零依赖的 TGA → PNG 转换脚本，便于查看软件渲染输出。
-- **编辑器集成**：内置 VS Code 的构建、运行与调试配置。
+从「画一条直线」开始，一步步实现：
+
+```
+Bresenham 直线 → 三角形光栅化 → 重心坐标插值 → z-buffer
+→ 相机与透视投影 → MVP 矩阵 → Phong 反射模型
+```
+
+全程**不依赖任何图形库**（不用 OpenGL / Vulkan），图像直接写进内存并保存为 TGA。
+目的是理解 GPU 渲染管线每一步到底在做什么。
+
+## 目录结构
+
+```text
+cpp-graphics/
+├── tinyrenderer/                  # 原作者的参考实现与素材
+│   ├── main.cpp / our_gl.* / model.* / tgaimage.* / geometry.h
+│   ├── obj/                       # 模型与贴图（african_head、diablo3_pose、floor）
+│   └── mine/                      # ★ 我自己按章节写的实现
+│       ├── 01_bresenham/ … 07_reflection/
+│       ├── Makefile
+│       ├── README.md
+│       └── fix.md                 # 教程代码适配本仓库的踩坑记录
+├── tools/
+│   ├── trun.sh                    # 编译 + 运行 + 转 PNG，一条命令
+│   └── build-current.sh           # VS Code F5 用的构建助手
+├── tga2png.py                     # TGA → PNG（彩色 / 灰度都支持）
+├── Makefile                       # 根入口，转发到 tinyrenderer/mine
+├── .vscode/                       # 编辑器配置（任务 / 调试 / IntelliSense）
+├── LICENSE
+└── README.md
+```
 
 ## 环境要求
 
 | 依赖 | 版本 | 说明 |
-|------|------|------|
+|---|---|---|
 | C++ 编译器 | 支持 C++20 | GCC 11+ / Clang 14+ / MSVC 19.3+ |
-| GNU Make | 任意 | 使用 Makefile 构建时需要 |
-| CMake | 3.16+ | 可选，使用 CMake 构建时需要 |
-| Python | 3.6+ | 可选，仅用于 `tga2png.py`（纯标准库，无第三方依赖） |
+| GNU Make | 任意 | 构建章节 |
+| Python | 3.6+ | 仅 `tga2png.py` 使用（纯标准库） |
+
+渲染结果是 TGA，多数看图软件能直接打开；想转 PNG 用 `tga2png.py`。
 
 ## 快速开始
 
@@ -53,132 +70,88 @@
 git clone https://github.com/Asayarr/cpp-graphics.git
 cd cpp-graphics
 
-make            # 编译全部示例
-make run        # 编译并运行
+# 编译 + 运行 + 转 PNG，一条命令
+./tools/trun.sh 07_reflection african_head
+
+# 或者编译 / 运行全部章节
+make
+make run
 ```
 
-也可以使用 CMake：
+在 VS Code 里：
 
-```bash
-cmake -B build
-cmake --build build
-```
+- 打开某个章节的 `main.cpp`，按 **F5** 编译并调试
+- `make all` 任务等价于根目录 `make`
 
-## 项目结构
+## 章节说明
 
-```text
-cpp-graphics/
-├── examples/                     # 教程示例
-│   ├── 01_hello.cpp … 08_template_specialization.cpp
-│   └── multifile/                # 多文件编译示范（.h / .cpp / main.cpp）
-├── mycode/                       # 你自己的 C++ 练习
-├── tinyrenderer/                 # TinyRenderer 教程项目（见下方版权说明）
-│   └── mine/                     # ★ 你的 tinyrenderer 实现写在这里
-├── CMakeLists.txt
-├── Makefile
-├── tga2png.py                    # TGA → PNG 转换脚本
-├── setup-tinyrenderer.sh         # TinyRenderer 教程项目初始化脚本
-├── .vscode/                      # 编辑器配置
-└── README.md
-```
+| 目录 | 内容 |
+|------|------|
+| `01_bresenham` | Bresenham 直线绘制 |
+| `01_wireframe` | 线框渲染（第 1 章作业） |
+| `01_answer` | 作者的线框解答（参考） |
+| `02_triangle_rasterization` | 三角形光栅化：先画轮廓 |
+| `02_modern_rasterization` | 有向面积 + 重心坐标填充 |
+| `02_homework` | 模型渲染（第 2 章作业） |
+| `03_barycentric_coordinates` | 重心坐标插值（灰度三角形） |
+| `03_homework` | 彩色渐变三角形（第 3 章作业） |
+| `04_sort_hidden_faces` | 画家算法：按深度排序 |
+| `04_z_buffer` | z-buffer（8 位灰度版） |
+| `05_rotating` | 绕 Y 轴旋转模型 |
+| `05_central_projection` | 中心（透视）投影 |
+| `05_camera_naive` | 旋转 + 透视 + 浮点 z-buffer（修复 8 位溢出 bug） |
+| `06_better_camera` | MVP 矩阵 + 相机 |
+| `07_refactoring` | 渲染管线重构（顶点 / 片元着色器拆分） |
+| `07_reflection` | Phong 反射模型（环境光 + 漫反射 + 高光） |
 
-## 示例说明
-
-| 文件 | 主题 | 主要内容 |
-|------|------|----------|
-| `examples/01_hello.cpp` | 基础 I/O | 编译模型、`std::cout` / `std::cin`、命名空间 |
-| `examples/02_basics.cpp` | 语言基础 | 初始化、`auto`、引用与指针、`const`、容器、范围 `for`、传参方式 |
-| `examples/03_classes.cpp` | 类与对象 | 构造 / 析构、成员初始化列表、RAII、运算符重载、`const` 成员函数 |
-| `examples/04_vec3.cpp` | 数学类型 | 手写 `vec3`：点积、叉积、归一化、完整运算符重载 |
-| `examples/05_polymorphism.cpp` | 资源与多态 | `unique_ptr` / `shared_ptr`、继承、虚函数、运行期多态 |
-| `examples/06_lambdas_templates.cpp` | 现代特性 | 函数模板、类模板、lambda 捕获、`std::function` |
-| `examples/07_graphics_skeleton.cpp` | 渲染骨架 | 典型渲染主循环结构（窗口、资源、更新、绘制） |
-| `examples/08_template_specialization.cpp` | 模板进阶 | 非类型模板参数、模板特化 —— 理解 `geometry.h` 的关键 |
-| `examples/multifile/` | 多文件工程 | 头文件 / 源文件分离与编译链接流程 |
-
-运行单个示例：
-
-```bash
-make examples/04_vec3
-./examples/04_vec3
-```
-
-## 构建
-
-### Makefile
-
-```bash
-make                        # 编译 examples/ 与 mycode/ 下全部 .cpp
-make run                    # 编译并运行
-make examples/04_vec3       # 仅编译指定文件
-make mycode/<your_file>     # 编译你自己的代码
-make clean                  # 清理构建产物
-```
-
-Makefile 会自动发现 `examples/` 与 `mycode/` 下的新 `.cpp` 文件，无需修改。
-
-### CMake
-
-```bash
-cmake -B build -DCMAKE_BUILD_TYPE=Debug
-cmake --build build
-```
-
-`examples/` 与 `mycode/` 下的每个 `.cpp` 会生成一个同名可执行文件；
-多文件示范生成 `multifile_demo`。新增文件后重新执行一次 configure 即可。
-
-## 调试
-
-仓库内置 VS Code 配置（`.vscode/`）：
-
-- **F5**：编译并调试当前打开的源文件（GDB）；
-- **Ctrl+Shift+B**：编译全部示例；
-- 任务面板中提供 `build current file` 与 `run current file`。
-
-在其他环境下，可直接使用命令行：
-
-```bash
-g++ -std=c++20 -Wall -Wextra -g examples/02_basics.cpp -o /tmp/02_basics
-gdb /tmp/02_basics
-```
+每个目录都是**独立的可执行程序**，互不依赖。
 
 ## 工具
 
-`tga2png.py` 用于将 TGA 图像转换为 PNG（纯 Python 标准库实现，无需 Pillow / ImageMagick），
-常用于查看软件渲染器的输出：
+### `tools/trun.sh`
 
 ```bash
-python3 tga2png.py framebuffer.tga            # 生成 framebuffer.png
-python3 tga2png.py framebuffer.tga output.png # 指定输出文件名
+./tools/trun.sh 07_reflection              # 默认用人脸模型
+./tools/trun.sh 07_reflection diablo3_pose # 换模型
+./tools/trun.sh 04_z                       # 前缀匹配
+./tools/trun.sh                            # 最近修改的一章
 ```
 
-## TinyRenderer
+自动完成：编译 → 带模型路径运行 → 把 `framebuffer.tga` / `zbuffer.tga` 转成 PNG。
 
-`tinyrenderer/` 是 [ssloy/tinyrenderer](https://github.com/ssloy/tinyrenderer) 的源码与必要素材（参考实现），
-`tinyrenderer/mine/` 用于跟随教程自己编写实现：
+### `tga2png.py`
 
 ```bash
-cd tinyrenderer/mine
-make run                    # 编译并运行
-python3 ~/cpp-graphics/tga2png.py framebuffer.tga
+python3 tga2png.py framebuffer.tga            # → framebuffer.png
+python3 tga2png.py zbuffer.tga out.png        # 灰度深度图也支持
 ```
 
-在 VS Code 中可直接使用任务 `tinyrenderer: build` / `tinyrenderer: run`，
-或用调试配置「调试 tinyrenderer/mine」按 F5 单步调试。
+纯 Python 标准库实现，不依赖 Pillow / ImageMagick。
 
-## 延伸学习
+### `tools/build-current.sh`
 
-- [TinyRenderer](https://github.com/ssloy/tinyrenderer) —— 用 500 行 C++ 实现软件渲染器，理解 OpenGL 的底层机制
-- [LearnOpenGL](https://learnopengl.com/) —— 系统性的现代 OpenGL 教程（[中文版](https://learnopengl-cn.github.io/)）
-- [glm](https://github.com/g-truc/glm) —— OpenGL 数学库，本仓库 `04_vec3` 可视为其简化版
-- [cppreference](https://en.cppreference.com/) —— C++ 标准库参考
+VS Code 的 F5 会调用它，自动判断"当前文件属于单文件还是多文件项目"，
+并自动链接 `tinyrenderer/` 下的 `tgaimage.cpp` / `model.cpp` / `our_gl.cpp`。
+
+## 踩坑记录
+
+[`tinyrenderer/mine/fix.md`](tinyrenderer/mine/fix.md) 记录了教程代码与本仓库版本不一致时的各种坑：
+
+- `Model::vert()` 返回 `vec4` 而不是 `vec3`
+- `constexpr` 里不能用 `std::cos` / `std::sin`（C2131）
+- `multiple definition of 'lookat'`（和 `our_gl.cpp` 撞车）
+- 一个目录只能有一个 `main()`
+- `geometry.h` 没有一元 `operator-`
+
+## 参考
+
+- TinyRenderer 教程：<https://haqr.eu/tinyrenderer/>
+- 原仓库：<https://github.com/ssloy/tinyrenderer>
+- LearnOpenGL：<https://learnopengl.com/>（[中文版](https://learnopengl-cn.github.io/)）
 
 ## 许可证
 
-本项目自写部分基于 [MIT License](LICENSE) 开源。
-
-### 第三方内容
+自写部分基于 [MIT License](LICENSE) 开源。
 
 `tinyrenderer/` 目录来自 [ssloy/tinyrenderer](https://github.com/ssloy/tinyrenderer)，
-同样基于 MIT License 发布（原始许可证见 `tinyrenderer/LICENSE.txt`）。
-为便于跟随教程学习，本仓库仅保留了其源码与必要素材。
+同样基于 MIT License（原始许可证见 `tinyrenderer/LICENSE.txt`）。

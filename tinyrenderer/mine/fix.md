@@ -113,7 +113,7 @@ std::tuple<int, int> project(const vec4& v) { ... }
 vec4 v = model.vert(i);                     // 原来写的是 vec3 v
 ```
 
-### 案例 B：`04_z-buffer`
+### 案例 B：`04_z_buffer`
 
 ```cpp
 // 报错

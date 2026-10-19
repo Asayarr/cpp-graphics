@@ -7,9 +7,12 @@
 #include "model.h"
 #include "tgaimage.h"
 
-mat<4, 4> ModelView, Viewport, Perspective;
+// 注意：Makefile 会链接 tinyrenderer/our_gl.cpp，那里也定义了
+// ModelView / Viewport / Perspective / lookat。
+// 本章用的是自己写的版本，所以加 static（内部链接）避免符号冲突。
+static mat<4, 4> ModelView, Viewport, Perspective;
 
-void lookat(const vec3 eye, const vec3 center, const vec3 up)
+static void lookat(const vec3 eye, const vec3 center, const vec3 up)
 {
     vec3 n = normalized(eye - center);
     vec3 l = normalized(cross(up, n));

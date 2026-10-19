@@ -23,16 +23,15 @@
       "preLaunchTask": "build current project"
     },
     {
-      "name": "调试 tinyrenderer/mine",
+      "name": "调试 tinyrenderer 章节（带模型参数）",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/tinyrenderer/mine/app",
+      "program": "${fileDirname}/app",
       "args": [
-        "${workspaceFolder}/tinyrenderer/obj/diablo3_pose/diablo3_pose.obj",
-        "${workspaceFolder}/tinyrenderer/obj/floor.obj"
+        "${workspaceFolder}/tinyrenderer/obj/african_head/african_head.obj"
       ],
       "stopAtEntry": false,
-      "cwd": "${workspaceFolder}/tinyrenderer/mine",
+      "cwd": "${fileDirname}",
       "environment": [],
       "externalConsole": false,
       "MIMode": "gdb",
@@ -44,7 +43,7 @@
           "ignoreFailures": true
         }
       ],
-      "preLaunchTask": "tinyrenderer: build"
+      "preLaunchTask": "build current project"
     }
   ]
 }
